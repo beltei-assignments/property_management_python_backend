@@ -6,8 +6,9 @@ def seed_roles():
     db = SessionLocal()
     role = [
         {"name": "Admin", "value": "admin"},
-        {"name": "Teacher", "value": "teacher"},
-        {"name": "Student", "value": "student"},
+        {"name": "Manager", "value": "manager"},
+        {"name": "Buyer", "value": "buyer"},
+        {"name": "Seller", "value": "seller"},
     ]
     try:
         for r in role:
