@@ -1,6 +1,7 @@
 from sqlalchemy import Boolean, Column, Integer, String
 from app.models.user_has_role_model import UserHasRole
 from sqlalchemy.orm import relationship
+from app.models.property_owner_model import PropertyOwner
 
 from app.database import Base
 
@@ -19,3 +20,4 @@ class User(Base):
     # Define the relationship
     roles = relationship("Role", secondary=UserHasRole, back_populates="users")
     properties = relationship("Property", back_populates="manager")
+    ownerships = relationship("PropertyOwner", back_populates="owner")

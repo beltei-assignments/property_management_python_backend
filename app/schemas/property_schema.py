@@ -55,4 +55,4 @@ class PropertyUpdate(BaseModel):
     price: Optional[Decimal] = None
     location: Optional[str] = None
     status: Optional[PropertyStatusEnum] = None
-    type: Optional[PropertyTypeEnum] = None 
+    type: Optional[PropertyTypeEnum] = None

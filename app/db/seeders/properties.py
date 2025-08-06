@@ -2,6 +2,7 @@ from app.database import SessionLocal
 from app.schemas.property_schema import PropertyCreate
 from app.services import property_service
 
+
 def seed_properties():
     properties = [
         {
@@ -11,7 +12,7 @@ def seed_properties():
             "price": 350000.00,
             "location": "123 Oak Street, Springfield, IL",
             "status": "available",
-            "type": "house"
+            "type": "house",
         },
         {
             "manager_id": 2,
@@ -20,7 +21,7 @@ def seed_properties():
             "price": 2500.00,
             "location": "456 Main Avenue, Downtown, NY",
             "status": "available",
-            "type": "apartment"
+            "type": "apartment",
         },
         {
             "manager_id": 3,
@@ -29,7 +30,7 @@ def seed_properties():
             "price": 5000.00,
             "location": "789 Business District, Chicago, IL",
             "status": "available",
-            "type": "office"
+            "type": "office",
         },
         {
             "manager_id": 4,
@@ -38,7 +39,7 @@ def seed_properties():
             "price": 1200000.00,
             "location": "321 Coastal Drive, Malibu, CA",
             "status": "available",
-            "type": "villa"
+            "type": "villa",
         },
         {
             "manager_id": 5,
@@ -47,8 +48,8 @@ def seed_properties():
             "price": 150000.00,
             "location": "555 Development Road, Austin, TX",
             "status": "available",
-            "type": "land"
-        }
+            "type": "land",
+        },
     ]
 
     for prop in properties:
@@ -61,6 +62,6 @@ def seed_properties():
                 price=prop["price"],
                 location=prop["location"],
                 status=prop["status"],
-                type=prop["type"]
-            )
+                type=prop["type"],
+            ),
         )

@@ -3,12 +3,24 @@ from fastapi.middleware.cors import CORSMiddleware
 import os
 from dotenv import load_dotenv
 from app.database import engine, Base
-from app.routers import user_route, auth_route, role_route, property_route
+from app.routers import (
+    user_route,
+    auth_route,
+    role_route,
+    property_route,
+    property_owner_route,
+)
 
 load_dotenv()  # Load variables from .env
 
 # Important: Ensure that the models are imported before creating the tables
-from app.models import user_has_role_model, user_model, role_model, property_model
+from app.models import (
+    user_has_role_model,
+    user_model,
+    role_model,
+    property_model,
+    property_owner_model,
+)
 
 # Create the database tables
 if os.getenv("DB_CREATE_ALL_TABLE") == "true":
@@ -32,6 +44,6 @@ app.add_middleware(
 prefix = "/api"
 
 app.include_router(auth_route.router, prefix=prefix)
-app.include_router(role_route.router, prefix=prefix)
 app.include_router(user_route.router, prefix=prefix)
 app.include_router(property_route.router, prefix=prefix)
+app.include_router(property_owner_route.router, prefix=prefix)

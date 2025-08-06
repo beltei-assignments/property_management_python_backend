@@ -29,6 +29,7 @@ def login(db: Session, email: str, password: str):
         "roles": user.roles,
     }
 
+
 def get_all_roles(db: Session):
     roles = db.query(Role).all()
 

@@ -1,14 +1,26 @@
-from sqlalchemy import Column,Integer,String,Text,DECIMAL,Enum,ForeignKey,TIMESTAMP,Boolean
+from sqlalchemy import (
+    Column,
+    Integer,
+    String,
+    Text,
+    DECIMAL,
+    Enum,
+    ForeignKey,
+    TIMESTAMP,
+    Boolean,
+)
 from sqlalchemy.orm import relationship
 import enum
 from sqlalchemy.sql import func
 
 from app.database import Base
 
+
 class PropertyStatus(enum.Enum):
     AVAILABLE = "available"
     SOLD = "sold"
     RENTED = "rented"
+
 
 class PropertyType(enum.Enum):
     HOUSE = "house"
@@ -22,6 +34,7 @@ class PropertyType(enum.Enum):
     RETAIL = "retail"
     INDUSTRIAL = "industrial"
 
+
 class Property(Base):
     __tablename__ = "properties"
 
@@ -34,9 +47,11 @@ class Property(Base):
     status = Column(Enum(PropertyStatus), nullable=False)
     type = Column(Enum(PropertyType), nullable=False)
     created_at = Column(TIMESTAMP, nullable=False, server_default=func.now())
-    updated_at = Column(TIMESTAMP, nullable=False, server_default=func.now(), onupdate=func.now())
+    updated_at = Column(
+        TIMESTAMP, nullable=False, server_default=func.now(), onupdate=func.now()
+    )
     disabled = Column(Boolean, nullable=False, default=False)
 
     # Define the relationship to the manager (User)
     manager = relationship("User", back_populates="properties")
-
+    owners = relationship("PropertyOwner", back_populates="property")
