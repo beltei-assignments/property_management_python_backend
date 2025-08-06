@@ -58,7 +58,7 @@ root
 
 4. **Run the application:**
    ```
-   uvicorn app.main:app --reload
+   uvicorn app.main:app --port 8080 --reload
    ```
 5. **Run seed data to tables:**
    ```
@@ -68,7 +68,7 @@ root
 ## Usage Examples
 Access Swagger dashboard for testing APIs.
 
-http://127.0.0.1:8000/docs
+http://127.0.0.1:8080/docs
 
 - **Login:**
   ```

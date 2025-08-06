@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import os
 from dotenv import load_dotenv
 from app.database import engine, Base
-from app.routers import user_route, auth_route, property_route
+from app.routers import user_route, auth_route, role_route, property_route
 
 load_dotenv()  # Load variables from .env
 
@@ -32,5 +32,6 @@ app.add_middleware(
 prefix = "/api"
 
 app.include_router(auth_route.router, prefix=prefix)
+app.include_router(role_route.router, prefix=prefix)
 app.include_router(user_route.router, prefix=prefix)
 app.include_router(property_route.router, prefix=prefix)
