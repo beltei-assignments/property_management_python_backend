@@ -3,8 +3,14 @@ from sqlalchemy import text
 from app.models.user_model import User
 from app.models.role_model import Role
 from app.models.user_has_role_model import UserHasRole
+from app.models.property_model import Property
 from app.db.seeders.roles import seed_roles
 from app.db.seeders.users import seed_users
+from app.db.seeders.properties import seed_properties
+import os
+from app.database import Base, engine
+from sqlalchemy import Column, TIMESTAMP
+from sqlalchemy.sql import func
 
 
 def seed():
@@ -14,6 +20,7 @@ def seed():
     print("---> Seeding roles and users, please wait... <---")
     seed_roles()
     seed_users()
+    seed_properties()
     print("---> Seeding roles and users completed. <---")
 
 
@@ -23,7 +30,10 @@ def clean_all_tables():
     db = SessionLocal()
     try:
         # For many-to-many association tables, use execute
-        db.execute(UserHasRole.delete())
+        # db.execute(UserHasRole.delete())
+        if os.getenv("DB_CREATE_ALL_TABLE") == "true":
+            Base.metadata.create_all(bind=engine)
+        db.query(Property).delete()  # Delete all properties first
         db.query(User).delete()
         db.query(Role).delete()
         db.commit()
@@ -31,6 +41,7 @@ def clean_all_tables():
         # Reset auto-increment counters
         db.execute(text("ALTER TABLE users AUTO_INCREMENT = 1;"))
         db.execute(text("ALTER TABLE roles AUTO_INCREMENT = 1;"))
+        db.execute(text("ALTER TABLE properties AUTO_INCREMENT = 1;"))
         db.commit()
     finally:
         db.close()

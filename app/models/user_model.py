@@ -18,3 +18,4 @@ class User(Base):
 
     # Define the relationship
     roles = relationship("Role", secondary=UserHasRole, back_populates="users")
+    properties = relationship("Property", back_populates="manager")
