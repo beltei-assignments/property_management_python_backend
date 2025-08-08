@@ -65,31 +65,31 @@ def delete_property_by_id(property_id: int, db: Session = Depends(get_db)):
     return {"success": True}
 
 
-@router.get("/owners/")
-def get_all_owners(property_id: int = None, db: Session = Depends(get_db)):
-    return property_owner_service.get_all_owners(db=db, property_id=property_id)
+# @router.get("/owners/")
+# def get_all_owners(property_id: int = None, db: Session = Depends(get_db)):
+#     return property_owner_service.get_all_owners(db=db, property_id=property_id)
 
 
-@router.post("/owners")
-def create_owner(
-    payload: property_owner_schema.PropertyOwnerCreate, db: Session = Depends(get_db)
-):
-    return property_owner_service.create_owner(db=db, payload=payload)
+# @router.post("/owners")
+# def create_owner(
+#     payload: property_owner_schema.PropertyOwnerCreate, db: Session = Depends(get_db)
+# ):
+#     return property_owner_service.create_owner(db=db, payload=payload)
 
 
-@router.put("/owners/{property_owner_id}")
-def update_owner(
-    property_owner_id: int,
-    payload: property_owner_schema.PropertyOwnerUpdate,
-    db: Session = Depends(get_db),
-):
-    return property_owner_service.update_owner(
-        db=db, property_owner_id=property_owner_id, payload=payload
-    )
+# @router.put("/owners/{property_owner_id}")
+# def update_owner(
+#     property_owner_id: int,
+#     payload: property_owner_schema.PropertyOwnerUpdate,
+#     db: Session = Depends(get_db),
+# ):
+#     return property_owner_service.update_owner(
+#         db=db, property_owner_id=property_owner_id, payload=payload
+#     )
 
 
-@router.delete("/owners/{property_owner_id}")
-def delete_owner(property_owner_id: int, db: Session = Depends(get_db)):
-    return property_owner_service.delete_owner(
-        db=db, property_owner_id=property_owner_id
-    )
+# @router.delete("/owners/{property_owner_id}")
+# def delete_owner(property_owner_id: int, db: Session = Depends(get_db)):
+#     return property_owner_service.delete_owner(
+#         db=db, property_owner_id=property_owner_id
+#     )

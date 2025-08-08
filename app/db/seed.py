@@ -30,7 +30,7 @@ def clean_all_tables():
     db = SessionLocal()
     try:
         # For many-to-many association tables, use execute
-        # db.execute(UserHasRole.delete())
+        db.execute(UserHasRole.delete())
         if os.getenv("DB_CREATE_ALL_TABLE") == "true":
             Base.metadata.create_all(bind=engine)
         db.query(Property).delete()  # Delete all properties first

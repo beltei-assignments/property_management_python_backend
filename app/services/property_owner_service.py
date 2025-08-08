@@ -10,7 +10,7 @@ def get_all_owners(db: Session, property_id: int = None):
     if property_id:
         query = query.filter(PropertyOwner.property_id == property_id)
     count = query.count()
-    owners = query.all()
+    owners = query.order_by(PropertyOwner.id.desc()).all()
     return {"count": count, "rows": [serialize_property_owner(o) for o in owners]}
 
 

@@ -44,6 +44,7 @@ app.add_middleware(
 prefix = "/api"
 
 app.include_router(auth_route.router, prefix=prefix)
+app.include_router(role_route.router, prefix=prefix)
 app.include_router(user_route.router, prefix=prefix)
 app.include_router(property_route.router, prefix=prefix)
 app.include_router(property_owner_route.router, prefix=prefix)
