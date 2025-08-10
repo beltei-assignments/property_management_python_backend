@@ -30,6 +30,8 @@ class PropertyBase(BaseModel):
     location: str
     status: PropertyStatusEnum
     type: PropertyTypeEnum
+    image_name: Optional[str] = None
+    image_url: Optional[str] = None
 
     class Config:
         from_attributes = True
@@ -41,9 +43,10 @@ class PropertyCreate(PropertyBase):
 
 class PropertyGet(PropertyBase):
     id: int
-    manager_id: int
+    image: Optional[str] = None  # This will be the image_url
     created_at: Optional[str] = None
     updated_at: Optional[str] = None
+    disabled: bool
 
     class Config:
         from_attributes = True
@@ -56,3 +59,34 @@ class PropertyUpdate(BaseModel):
     location: Optional[str] = None
     status: Optional[PropertyStatusEnum] = None
     type: Optional[PropertyTypeEnum] = None
+    image_name: Optional[str] = None
+    image_url: Optional[str] = None
+
+
+class ManagerInfo(BaseModel):
+    id: int
+    email: str
+    first_name: str
+    last_name: str
+    phone_number: str
+    disabled: bool
+
+
+class PropertyResponse(BaseModel):
+    id: int
+    image: Optional[str] = None
+    title: str
+    description: Optional[str] = None
+    price: float
+    location: str
+    status: str
+    type: str
+    created_at: Optional[str] = None
+    updated_at: Optional[str] = None
+    disabled: bool
+    manager: Optional[ManagerInfo] = None
+
+
+class PropertyListResponse(BaseModel):
+    count: int
+    rows: list[PropertyResponse]

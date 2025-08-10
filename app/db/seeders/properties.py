@@ -13,6 +13,8 @@ def seed_properties():
             "location": "123 Oak Street, Springfield, IL",
             "status": "available",
             "type": "house",
+            "image_name": None,
+            "image_url": None,
         },
         {
             "manager_id": 2,
@@ -22,6 +24,8 @@ def seed_properties():
             "location": "456 Main Avenue, Downtown, NY",
             "status": "available",
             "type": "apartment",
+            "image_name": None,
+            "image_url": None,
         },
         {
             "manager_id": 3,
@@ -31,6 +35,8 @@ def seed_properties():
             "location": "789 Business District, Chicago, IL",
             "status": "available",
             "type": "office",
+            "image_name": None,
+            "image_url": None,
         },
         {
             "manager_id": 4,
@@ -40,6 +46,8 @@ def seed_properties():
             "location": "321 Coastal Drive, Malibu, CA",
             "status": "available",
             "type": "villa",
+            "image_name": None,
+            "image_url": None,
         },
         {
             "manager_id": 5,
@@ -49,6 +57,8 @@ def seed_properties():
             "location": "555 Development Road, Austin, TX",
             "status": "available",
             "type": "land",
+            "image_name": None,
+            "image_url": None,
         },
     ]
 
@@ -63,5 +73,7 @@ def seed_properties():
                 location=prop["location"],
                 status=prop["status"],
                 type=prop["type"],
+                image_name=prop["image_name"],
+                image_url=prop["image_url"],
             ),
         )

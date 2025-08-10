@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, UploadFile, File, Form
 from sqlalchemy.orm import Session
 from typing import Optional
 from app.database import get_db, SessionLocal
@@ -6,6 +6,9 @@ from app.schemas import property_schema as property_schema
 from app.services import property_service as property_service
 from app.schemas import property_owner_schema
 from app.services import property_owner_service
+import os
+import uuid
+from datetime import datetime
 
 router = APIRouter(tags=["Property management"])
 router.prefix = "/properties"
@@ -41,15 +44,60 @@ def get_property_by_id(property_id: int, db: Session = Depends(get_db)):
     return data
 
 
-@router.post("/")
+@router.put("/{property_id}")
 def create_property(
-    property: property_schema.PropertyCreate, db: Session = Depends(get_db)
+    property_id: int,
+    manager_id: int = Form(...),
+    title: str = Form(...),
+    description: Optional[str] = Form(None),
+    price: float = Form(...),
+    location: str = Form(...),
+    status: str = Form(...),
+    type: str = Form(...),
+    image: Optional[UploadFile] = File(None),
+    db: Session = Depends(get_db),
 ):
-    property_service.create_property(db=db, payload=property)
+    # Handle image upload
+    image_name = None
+    image_url = None
+
+    if image:
+        # Generate unique filename
+        file_extension = (
+            os.path.splitext(image.filename)[1] if image.filename else '.jpg'
+        )
+        image_name = f"{uuid.uuid4()}{file_extension}"
+
+        # Create uploads directory if it doesn't exist
+        upload_dir = "uploads/properties"
+        os.makedirs(upload_dir, exist_ok=True)
+
+        # Save file
+        file_path = os.path.join(upload_dir, image_name)
+        with open(file_path, "wb") as buffer:
+            buffer.write(image.file.read())
+
+        # Generate URL (you might want to adjust this based on your server configuration)
+        image_url = f"/uploads/properties/{image_name}"
+
+    # Create property data
+    property_data = property_schema.PropertyCreate(
+        manager_id=manager_id,
+        title=title,
+        description=description,
+        price=price,
+        location=location,
+        status=status,
+        type=type,
+        image_name=image_name,
+        image_url=image_url,
+    )
+
+    property_service.create_property(db=db, payload=property_data)
     return {"success": True}
 
 
-@router.put("/{property_id}")
+@router.post("/{property_id}")
 def update_property_by_id(
     property_id: int,
     property: property_schema.PropertyUpdate,

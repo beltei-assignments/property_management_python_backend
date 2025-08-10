@@ -107,6 +107,7 @@ def serialize_property_with_manager(property: Property):
     manager = property.manager if hasattr(property, 'manager') else None
     return {
         "id": property.id,
+        "image": property.image_url,  # Use image_url as the image field
         "title": property.title,
         "description": property.description,
         "price": float(property.price),

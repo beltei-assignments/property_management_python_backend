@@ -46,6 +46,8 @@ class Property(Base):
     location = Column(Text, nullable=False)
     status = Column(Enum(PropertyStatus), nullable=False)
     type = Column(Enum(PropertyType), nullable=False)
+    image_name = Column(String(255), nullable=True)
+    image_url = Column(String(500), nullable=True)
     created_at = Column(TIMESTAMP, nullable=False, server_default=func.now())
     updated_at = Column(
         TIMESTAMP, nullable=False, server_default=func.now(), onupdate=func.now()
