@@ -40,6 +40,7 @@ def get_all_properties(
     count = query.count()
     properties = (
         query.options(joinedload(Property.manager))
+        .order_by(Property.id.desc())
         .offset((page - 1) * limit)
         .limit(limit)
         .all()

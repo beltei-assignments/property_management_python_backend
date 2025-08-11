@@ -5,7 +5,7 @@ from app.schemas import property_owner_schema
 from app.services import property_owner_service
 
 router = APIRouter(tags=["Property owner management"])
-router.prefix = "/properties/owners"
+router.prefix = "/properties-owners"
 
 
 @router.get("/")

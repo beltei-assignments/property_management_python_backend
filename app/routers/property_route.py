@@ -44,9 +44,8 @@ def get_property_by_id(property_id: int, db: Session = Depends(get_db)):
     return data
 
 
-@router.put("/{property_id}")
+@router.post("/")
 def create_property(
-    property_id: int,
     manager_id: int = Form(...),
     title: str = Form(...),
     description: Optional[str] = Form(None),
@@ -97,13 +96,56 @@ def create_property(
     return {"success": True}
 
 
-@router.post("/{property_id}")
+@router.put("/{property_id}")
 def update_property_by_id(
     property_id: int,
-    property: property_schema.PropertyUpdate,
+    manager_id: Optional[int] = Form(None),
+    title: Optional[str] = Form(None),
+    description: Optional[str] = Form(None),
+    price: Optional[float] = Form(None),
+    location: Optional[str] = Form(None),
+    status: Optional[str] = Form(None),
+    type: Optional[str] = Form(None),
+    image: Optional[UploadFile] = File(None),
     db: Session = Depends(get_db),
 ):
-    property_service.update_property(db=db, property_id=property_id, payload=property)
+    # Handle image upload if provided
+    image_name = None
+    image_url = None
+
+    if image:
+        # Generate unique filename
+        file_extension = (
+            os.path.splitext(image.filename)[1] if image.filename else '.jpg'
+        )
+        image_name = f"{uuid.uuid4()}{file_extension}"
+
+        # Create uploads directory if it doesn't exist
+        upload_dir = "uploads/properties"
+        os.makedirs(upload_dir, exist_ok=True)
+
+        # Save file
+        file_path = os.path.join(upload_dir, image_name)
+        with open(file_path, "wb") as buffer:
+            buffer.write(image.file.read())
+
+        # Generate URL
+        image_url = f"/uploads/properties/{image_name}"
+
+    # Create property data for update
+    property_data = property_schema.PropertyUpdate(
+        manager_id=manager_id,
+        title=title,
+        description=description,
+        price=price,
+        location=location,
+        status=status,
+        type=type,
+        image_name=image_name,
+        image_url=image_url,
+    )
+
+    property_service.update_property(db=db, property_id=property_id, payload=property_data)
     return {"success": True}
 
 
@@ -113,31 +155,31 @@ def delete_property_by_id(property_id: int, db: Session = Depends(get_db)):
     return {"success": True}
 
 
-@router.get("/owners/")
-def get_all_owners(property_id: int = None, db: Session = Depends(get_db)):
-    return property_owner_service.get_all_owners(db=db, property_id=property_id)
+# @router.get("/owners/")
+# def get_all_owners(property_id: int = None, db: Session = Depends(get_db)):
+#     return property_owner_service.get_all_owners(db=db, property_id=property_id)
 
 
-@router.post("/owners")
-def create_owner(
-    payload: property_owner_schema.PropertyOwnerCreate, db: Session = Depends(get_db)
-):
-    return property_owner_service.create_owner(db=db, payload=payload)
+# @router.post("/owners")
+# def create_owner(
+#     payload: property_owner_schema.PropertyOwnerCreate, db: Session = Depends(get_db)
+# ):
+#     return property_owner_service.create_owner(db=db, payload=payload)
 
 
-@router.put("/owners/{property_owner_id}")
-def update_owner(
-    property_owner_id: int,
-    payload: property_owner_schema.PropertyOwnerUpdate,
-    db: Session = Depends(get_db),
-):
-    return property_owner_service.update_owner(
-        db=db, property_owner_id=property_owner_id, payload=payload
-    )
+# @router.put("/owners/{property_owner_id}")
+# def update_owner(
+#     property_owner_id: int,
+#     payload: property_owner_schema.PropertyOwnerUpdate,
+#     db: Session = Depends(get_db),
+# ):
+#     return property_owner_service.update_owner(
+#         db=db, property_owner_id=property_owner_id, payload=payload
+#     )
 
 
-@router.delete("/owners/{property_owner_id}")
-def delete_owner(property_owner_id: int, db: Session = Depends(get_db)):
-    return property_owner_service.delete_owner(
-        db=db, property_owner_id=property_owner_id
-    )
+# @router.delete("/owners/{property_owner_id}")
+# def delete_owner(property_owner_id: int, db: Session = Depends(get_db)):
+#     return property_owner_service.delete_owner(
+#         db=db, property_owner_id=property_owner_id
+#     )

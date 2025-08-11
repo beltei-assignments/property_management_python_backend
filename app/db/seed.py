@@ -93,6 +93,7 @@ def clean_all_tables():
     try:
         # For many-to-many association tables, use execute
         # Delete in correct order to avoid foreign key constraint violations
+        db.execute(UserHasRole.delete())
         if os.getenv("DB_CREATE_ALL_TABLE") == "true":
             Base.metadata.create_all(bind=engine)
 

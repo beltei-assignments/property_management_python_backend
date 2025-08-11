@@ -23,11 +23,17 @@ class PropertyOwnerBase(BaseModel):
 
 
 class PropertyOwnerCreate(PropertyOwnerBase):
-    pass
+    property_id: int
+    owner_id: int
+    ownership_start: date
+    ownership_end: Optional[date] = None
 
 
 class PropertyOwnerUpdate(PropertyOwnerBase):
-    pass
+    property_id: int
+    owner_id: int
+    ownership_start: date
+    ownership_end: Optional[date] = None
 
 
 class PropertyOwnerGet(PropertyOwnerBase):
