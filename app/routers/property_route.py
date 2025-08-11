@@ -99,7 +99,6 @@ def create_property(
 @router.put("/{property_id}")
 def update_property_by_id(
     property_id: int,
-    manager_id: Optional[int] = Form(None),
     title: Optional[str] = Form(None),
     description: Optional[str] = Form(None),
     price: Optional[float] = Form(None),
@@ -109,12 +108,15 @@ def update_property_by_id(
     image: Optional[UploadFile] = File(None),
     db: Session = Depends(get_db),
 ):
+    # Get existing property data to preserve current image
+    existing_property = property_service.get_property_by_id(db=db, property_id=property_id)
+    
     # Handle image upload if provided
-    image_name = None
-    image_url = None
+    image_name = existing_property.get("image_name")  # Keep existing image name
+    image_url = existing_property.get("image_url")    # Keep existing image URL
 
     if image:
-        # Generate unique filename
+        # Generate unique filename for new image
         file_extension = (
             os.path.splitext(image.filename)[1] if image.filename else '.jpg'
         )
@@ -124,26 +126,36 @@ def update_property_by_id(
         upload_dir = "uploads/properties"
         os.makedirs(upload_dir, exist_ok=True)
 
-        # Save file
+        # Save new file
         file_path = os.path.join(upload_dir, image_name)
         with open(file_path, "wb") as buffer:
             buffer.write(image.file.read())
 
-        # Generate URL
+        # Generate new URL
         image_url = f"/uploads/properties/{image_name}"
 
-    # Create property data for update
-    property_data = property_schema.PropertyUpdate(
-        manager_id=manager_id,
-        title=title,
-        description=description,
-        price=price,
-        location=location,
-        status=status,
-        type=type,
-        image_name=image_name,
-        image_url=image_url,
-    )
+    # Create property data for update - only include fields that are provided
+    update_data = {}
+    
+    if title is not None:
+        update_data["title"] = title
+    if description is not None:
+        update_data["description"] = description
+    if price is not None:
+        update_data["price"] = price
+    if location is not None:
+        update_data["location"] = location
+    if status is not None:
+        update_data["status"] = status
+    if type is not None:
+        update_data["type"] = type
+    if image_name is not None:
+        update_data["image_name"] = image_name
+    if image_url is not None:
+        update_data["image_url"] = image_url
+
+    # Create PropertyUpdate schema with only the provided fields
+    property_data = property_schema.PropertyUpdate(**update_data)
 
     property_service.update_property(db=db, property_id=property_id, payload=property_data)
     return {"success": True}
