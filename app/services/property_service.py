@@ -16,6 +16,8 @@ def get_all_properties(
     db: Session,
     page: int = 1,
     limit: int = 10,
+    type: str = None,
+    status: str = None,
     search: str = None,
     location: str = None,
     price_from: float = None,
@@ -30,6 +32,10 @@ def get_all_properties(
                 Property.description.ilike(f"%{search}%"),
             )
         )
+    if type:
+        query = query.filter(Property.type == type)
+    if status:
+        query = query.filter(Property.status == status)
     if location:
         query = query.filter(Property.location.ilike(f"%{location}%"))
     if price_from is not None:
@@ -74,7 +80,8 @@ def create_property(db: Session, payload: PropertyCreate):
     db.add(new_property)
     db.commit()
     db.refresh(new_property)
-    return {"success": True}
+
+    return new_property
 
 
 def update_property(db: Session, property_id: int, payload: PropertyUpdate):

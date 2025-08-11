@@ -18,6 +18,8 @@ router.prefix = "/properties"
 def get_all_properties(
     page: int = 1,
     limit: int = 10,
+    type: Optional[str] = None,
+    status: Optional[str] = None,
     search: Optional[str] = None,
     location: Optional[str] = None,
     price_from: Optional[float] = None,
@@ -28,6 +30,8 @@ def get_all_properties(
         db=db,
         page=page,
         limit=limit,
+        type=type,
+        status=status,
         search=search,
         location=location,
         price_from=price_from,
@@ -93,6 +97,7 @@ def create_property(
     )
 
     property_service.create_property(db=db, payload=property_data)
+
     return {"success": True}
 
 
@@ -109,11 +114,13 @@ def update_property_by_id(
     db: Session = Depends(get_db),
 ):
     # Get existing property data to preserve current image
-    existing_property = property_service.get_property_by_id(db=db, property_id=property_id)
-    
+    existing_property = property_service.get_property_by_id(
+        db=db, property_id=property_id
+    )
+
     # Handle image upload if provided
     image_name = existing_property.get("image_name")  # Keep existing image name
-    image_url = existing_property.get("image_url")    # Keep existing image URL
+    image_url = existing_property.get("image_url")  # Keep existing image URL
 
     if image:
         # Generate unique filename for new image
@@ -136,7 +143,7 @@ def update_property_by_id(
 
     # Create property data for update - only include fields that are provided
     update_data = {}
-    
+
     if title is not None:
         update_data["title"] = title
     if description is not None:
@@ -157,7 +164,9 @@ def update_property_by_id(
     # Create PropertyUpdate schema with only the provided fields
     property_data = property_schema.PropertyUpdate(**update_data)
 
-    property_service.update_property(db=db, property_id=property_id, payload=property_data)
+    property_service.update_property(
+        db=db, property_id=property_id, payload=property_data
+    )
     return {"success": True}
 
 

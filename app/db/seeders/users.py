@@ -47,6 +47,8 @@ def seed_users():
         },
     ]
 
+    print("---> Seeding users, please wait... <---")
+
     for user in users:
         user_service.create_user(
             db=SessionLocal(),
@@ -59,3 +61,5 @@ def seed_users():
                 roles_ids=user["roles_ids"],
             ),
         )
+
+    print("---> Seeding users completed. <---")
